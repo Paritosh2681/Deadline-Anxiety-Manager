@@ -96,7 +96,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Task not found' }, { status: 404 })
     }
 
-    return new NextResponse(null, { status: 204 })
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error('DELETE /api/tasks/[id] error:', error)
     return NextResponse.json(

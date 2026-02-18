@@ -72,7 +72,10 @@ export async function createTask(payload: CreateTaskPayload): Promise<Task> {
 export async function deleteTask(id: string): Promise<void> {
   const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
   if (!res.ok) throw new Error('Failed to delete task')
-  globalMutate((key: string) => typeof key === 'string' && key.startsWith(TASKS_KEY))
+  // Clear the deleted task's individual cache without revalidating (it no longer exists)
+  await globalMutate(`/api/tasks/${id}`, undefined, { revalidate: false })
+  // Revalidate the task list so the dashboard updates
+  await globalMutate('/api/tasks?status=all')
 }
 
 export async function completeMicroTask(

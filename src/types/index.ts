@@ -41,6 +41,7 @@ export interface CreateTaskPayload {
   name: string
   deadline: string
   effortLevel: EffortLevel
+  microTasks: string[]
 }
 
 export interface SimulatePayload {

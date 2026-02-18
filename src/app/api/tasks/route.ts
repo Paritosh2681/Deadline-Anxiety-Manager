@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db/connection'
 import { TaskModel } from '@/lib/db/models/Task'
-import { generateMicroTasks } from '@/lib/microtasks'
 import { recalculatePressure } from '@/lib/pressure'
 import { UserBehaviorModel } from '@/lib/db/models/UserBehavior'
 
@@ -45,11 +44,18 @@ export async function POST(request: NextRequest) {
     await connectDB()
 
     const body = await request.json()
-    const { name, deadline, effortLevel } = body
+    const { name, deadline, effortLevel, microTasks: microTaskTitles } = body
 
     if (!name || !deadline || !effortLevel) {
       return NextResponse.json(
         { error: 'name, deadline, and effortLevel are required' },
+        { status: 400 }
+      )
+    }
+
+    if (!Array.isArray(microTaskTitles) || microTaskTitles.length === 0) {
+      return NextResponse.json(
+        { error: 'At least one micro-task is required' },
         { status: 400 }
       )
     }
@@ -69,7 +75,19 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const microTasks = generateMicroTasks(name, effortLevel, deadlineDate)
+    const { differenceInDays } = await import('date-fns')
+    const daysAvailable = Math.max(1, differenceInDays(deadlineDate, new Date()))
+
+    const microTasks = microTaskTitles
+      .filter((t: string) => typeof t === 'string' && t.trim())
+      .map((title: string, index: number) => ({
+        id: crypto.randomUUID(),
+        title: title.trim(),
+        isCompleted: false,
+        completedAt: null,
+        order: index,
+        dayTarget: Math.ceil(((index + 1) / microTaskTitles.length) * daysAvailable),
+      }))
     const { pressureScore, pressureZone } = recalculatePressure({
       effortLevel,
       deadline: deadlineDate,

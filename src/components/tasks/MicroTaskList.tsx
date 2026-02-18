@@ -10,10 +10,7 @@ interface MicroTaskListProps {
 }
 
 export default function MicroTaskList({ microTasks, onToggle, disabled }: MicroTaskListProps) {
-  const sorted = [...microTasks].sort((a, b) => {
-    if (a.isCompleted !== b.isCompleted) return a.isCompleted ? 1 : -1
-    return a.order - b.order
-  })
+  const sorted = [...microTasks].sort((a, b) => a.order - b.order)
 
   return (
     <div className="space-y-1">
