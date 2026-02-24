@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { useTheme } from '@/context/ThemeContext'
 
 const navItems = [
-  { href: '/', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '/tasks/new', label: 'New Task' },
   { href: '/insights', label: 'Insights' },
 ]

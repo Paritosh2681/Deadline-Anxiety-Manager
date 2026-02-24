@@ -32,7 +32,7 @@ export function useKeyboardShortcuts(actions?: ShortcutActions) {
           break
         case 'd':
           e.preventDefault()
-          router.push('/')
+          router.push('/dashboard')
           break
         case 'i':
           e.preventDefault()

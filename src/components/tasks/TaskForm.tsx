@@ -73,7 +73,7 @@ export default function TaskForm() {
 
       toast.success('Task created')
       await mutate('/api/tasks?status=all')
-      router.push('/')
+      router.push('/dashboard')
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong')
     } finally {

@@ -39,8 +39,8 @@ export default function TaskDetailPage() {
 
   const consequenceMessage = task.pressureScore > 30
     ? CONSEQUENCE_MESSAGES[task.pressureZone][
-        Math.floor(Math.random() * CONSEQUENCE_MESSAGES[task.pressureZone].length)
-      ]
+    Math.floor(Math.random() * CONSEQUENCE_MESSAGES[task.pressureZone].length)
+    ]
     : null
 
   const handleToggle = async (microTaskId: string) => {
@@ -65,7 +65,7 @@ export default function TaskDetailPage() {
     try {
       await deleteTask(task._id)
       toast.success('Task deleted')
-      router.push('/')
+      router.push('/dashboard')
     } catch {
       toast.error('Failed to delete task')
     }
