@@ -9,6 +9,8 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import Modal from '@/components/ui/Modal'
 import { KEYBOARD_SHORTCUTS } from '@/lib/constants'
 
+import { AuthProvider } from '@/context/AuthContext'
+
 function ShortcutsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Keyboard Shortcuts">
@@ -48,10 +50,12 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider>
-      <TaskProvider>
-        <AppShellInner>{children}</AppShellInner>
-      </TaskProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <TaskProvider>
+          <AppShellInner>{children}</AppShellInner>
+        </TaskProvider>
+      </ThemeProvider>
+    </AuthProvider>
   )
 }

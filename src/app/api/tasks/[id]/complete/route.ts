@@ -3,12 +3,18 @@ import { connectDB } from '@/lib/db/connection'
 import { TaskModel } from '@/lib/db/models/Task'
 import { UserBehaviorModel } from '@/lib/db/models/UserBehavior'
 import { recalculatePressure } from '@/lib/pressure'
+import { getAuthUser } from '@/lib/auth'
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const userId = await getAuthUser(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     await connectDB()
 
     const body = await request.json()
@@ -21,7 +27,7 @@ export async function PATCH(
       )
     }
 
-    const task = await TaskModel.findById(params.id)
+    const task = await TaskModel.findOne({ _id: params.id, userId })
     if (!task) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 })
     }
@@ -52,6 +58,7 @@ export async function PATCH(
       await UserBehaviorModel.create({
         event: 'task_completed',
         taskId: task._id,
+        userId,
         metadata: { pressureScore, totalMicroTasks: task.microTasks.length },
       })
     } else {
@@ -62,6 +69,7 @@ export async function PATCH(
     await UserBehaviorModel.create({
       event: 'microtask_completed',
       taskId: task._id,
+      userId,
       metadata: {
         microTaskId,
         isCompleted: microTask.isCompleted,

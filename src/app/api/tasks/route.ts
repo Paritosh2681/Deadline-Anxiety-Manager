@@ -3,19 +3,25 @@ import { connectDB } from '@/lib/db/connection'
 import { TaskModel } from '@/lib/db/models/Task'
 import { recalculatePressure } from '@/lib/pressure'
 import { UserBehaviorModel } from '@/lib/db/models/UserBehavior'
+import { getAuthUser } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getAuthUser(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     await connectDB()
 
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') || 'active'
 
-    let filter: Record<string, unknown> = {}
+    let filter: Record<string, unknown> = { userId }
     if (status === 'active') {
-      filter = { isCompleted: false }
+      filter = { userId, isCompleted: false }
     } else if (status === 'completed') {
-      filter = { isCompleted: true }
+      filter = { userId, isCompleted: true }
     }
 
     const tasks = await TaskModel.find(filter)
@@ -23,7 +29,6 @@ export async function GET(request: NextRequest) {
       .lean()
 
     // Recalculate pressure scores on read
-    const now = new Date()
     const updated = tasks.map((task: any) => {
       const { pressureScore, pressureZone } = recalculatePressure(task)
       return { ...task, pressureScore, pressureZone }
@@ -41,6 +46,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getAuthUser(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     await connectDB()
 
     const body = await request.json()
@@ -95,6 +105,7 @@ export async function POST(request: NextRequest) {
     })
 
     const task = await TaskModel.create({
+      userId,
       name: name.trim(),
       deadline: deadlineDate,
       effortLevel,
@@ -111,6 +122,7 @@ export async function POST(request: NextRequest) {
     await UserBehaviorModel.create({
       event: 'task_created',
       taskId: task._id,
+      userId,
       metadata: { effortLevel, pressureScore },
     })
 

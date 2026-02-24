@@ -16,6 +16,7 @@ const PressureSnapshotSchema = new Schema({
 }, { _id: false })
 
 const TaskSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   name: { type: String, required: true, trim: true, maxlength: 200 },
   deadline: { type: Date, required: true },
   effortLevel: { type: String, enum: ['easy', 'medium', 'hard'], required: true },

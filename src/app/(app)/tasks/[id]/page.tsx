@@ -139,7 +139,7 @@ export default function TaskDetailPage() {
 
       {/* Actions */}
       <div className="flex gap-3">
-        <Button variant="ghost" onClick={() => router.push('/')}>
+        <Button variant="ghost" onClick={() => router.push('/dashboard')}>
           Back to dashboard
         </Button>
         <Button variant="danger" size="sm" onClick={handleDelete}>

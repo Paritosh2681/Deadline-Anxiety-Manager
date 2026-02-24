@@ -14,6 +14,7 @@ const UserBehaviorSchema = new Schema({
     required: true,
   },
   taskId: { type: Schema.Types.ObjectId, ref: 'Task', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
   timestamp: { type: Date, default: Date.now },
   metadata: { type: Schema.Types.Mixed, default: {} },
 })

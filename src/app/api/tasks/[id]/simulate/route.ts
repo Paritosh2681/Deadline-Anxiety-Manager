@@ -4,12 +4,18 @@ import { TaskModel } from '@/lib/db/models/Task'
 import { UserBehaviorModel } from '@/lib/db/models/UserBehavior'
 import { calculatePressureScore, getPressureZone } from '@/lib/pressure'
 import { EffortLevel } from '@/types'
+import { getAuthUser } from '@/lib/auth'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const userId = await getAuthUser(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     await connectDB()
 
     const body = await request.json()
@@ -22,7 +28,7 @@ export async function POST(
       )
     }
 
-    const task = await TaskModel.findById(params.id).lean()
+    const task = await TaskModel.findOne({ _id: params.id, userId }).lean()
     if (!task) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 })
     }
@@ -60,6 +66,7 @@ export async function POST(
     await UserBehaviorModel.create({
       event: 'simulator_used',
       taskId: taskData._id,
+      userId,
       metadata: { daysToSkip, currentScore, simulatedScore },
     })
 

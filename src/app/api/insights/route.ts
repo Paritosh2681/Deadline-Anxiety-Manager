@@ -1,19 +1,25 @@
 export const dynamic = 'force-dynamic'
 
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db/connection'
 import { TaskModel } from '@/lib/db/models/Task'
 import { UserBehaviorModel } from '@/lib/db/models/UserBehavior'
 import { Insight } from '@/types'
+import { getAuthUser } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const userId = await getAuthUser(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     await connectDB()
 
     const [allTasks, completedTasks, behaviors] = await Promise.all([
-      TaskModel.find().lean(),
-      TaskModel.find({ isCompleted: true }).lean(),
-      UserBehaviorModel.find().sort({ timestamp: -1 }).limit(500).lean(),
+      TaskModel.find({ userId }).lean(),
+      TaskModel.find({ userId, isCompleted: true }).lean(),
+      UserBehaviorModel.find({ userId }).sort({ timestamp: -1 }).limit(500).lean(),
     ])
 
     const insights: Insight[] = []
@@ -47,9 +53,9 @@ export async function GET() {
 
     // Most common effort level
     const effortCounts: Record<string, number> = { easy: 0, medium: 0, hard: 0 }
-    ;(allTasks as any[]).forEach((t) => {
-      if (t.effortLevel) effortCounts[t.effortLevel]++
-    })
+      ; (allTasks as any[]).forEach((t) => {
+        if (t.effortLevel) effortCounts[t.effortLevel]++
+      })
     const mostCommon = Object.entries(effortCounts).sort((a, b) => b[1] - a[1])[0]
     if (mostCommon && mostCommon[1] > 0) {
       insights.push({

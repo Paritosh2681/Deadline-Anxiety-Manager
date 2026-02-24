@@ -4,10 +4,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db/connection'
 import { TaskModel } from '@/lib/db/models/Task'
 import { TimelineDataPoint } from '@/types'
-import { subDays, format, startOfDay } from 'date-fns'
+import { subDays, format } from 'date-fns'
+import { getAuthUser } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getAuthUser(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     await connectDB()
 
     const { searchParams } = new URL(request.url)
@@ -15,6 +21,7 @@ export async function GET(request: NextRequest) {
     const startDate = subDays(new Date(), days)
 
     const tasks = await TaskModel.find({
+      userId,
       'pressureHistory.date': { $gte: startDate },
     }).lean()
 
@@ -26,7 +33,7 @@ export async function GET(request: NextRequest) {
       dailyData[date] = { scores: [], taskCount: 0, completedCount: 0 }
     }
 
-    ;(tasks as any[]).forEach((task) => {
+    ; (tasks as any[]).forEach((task) => {
       task.pressureHistory?.forEach((snapshot: any) => {
         const date = format(new Date(snapshot.date), 'yyyy-MM-dd')
         if (dailyData[date]) {
