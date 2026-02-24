@@ -74,8 +74,8 @@ export async function deleteTask(id: string): Promise<void> {
   if (!res.ok) throw new Error('Failed to delete task')
   // Clear the deleted task's individual cache without revalidating (it no longer exists)
   await globalMutate(`/api/tasks/${id}`, undefined, { revalidate: false })
-  // Revalidate the task list so the dashboard updates
-  await globalMutate('/api/tasks?status=all')
+  // Revalidate all task list caches so the dashboard updates regardless of active filter
+  await globalMutate((key: string) => typeof key === 'string' && key.startsWith(TASKS_KEY))
 }
 
 export async function completeMicroTask(
