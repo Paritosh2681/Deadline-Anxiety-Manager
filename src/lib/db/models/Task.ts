@@ -29,6 +29,7 @@ const TaskSchema = new Schema({
   rescheduleCount: { type: Number, default: 0 },
   lastRescheduledAt: { type: Date, default: null },
   pressureHistory: { type: [PressureSnapshotSchema], default: [] },
+  reminderTime: { type: String, default: null }, // e.g. "09:00" — daily notification time
 }, {
   timestamps: true,
 })

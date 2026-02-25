@@ -15,6 +15,7 @@ export default function TaskForm() {
   const [deadline, setDeadline] = useState('')
   const [effortLevel, setEffortLevel] = useState<EffortLevel>('medium')
   const [microTasks, setMicroTasks] = useState<string[]>([''])
+  const [reminderTime, setReminderTime] = useState('09:00')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -63,6 +64,7 @@ export default function TaskForm() {
           deadline,
           effortLevel,
           microTasks: validMicroTasks,
+          reminderTime: reminderTime || null,
         }),
       })
 
@@ -129,6 +131,22 @@ export default function TaskForm() {
         error={errors.deadline}
         min={new Date().toISOString().split('T')[0]}
       />
+
+      <div className="space-y-1.5">
+        <label htmlFor="reminderTime" className="block text-sm font-semibold text-[var(--color-text-primary)]">
+          Daily reminder time
+        </label>
+        <p className="text-xs text-[var(--color-text-secondary)]">
+          Get notified at this time every day until the deadline.
+        </p>
+        <input
+          id="reminderTime"
+          type="time"
+          value={reminderTime}
+          onChange={(e) => setReminderTime(e.target.value)}
+          className="w-full px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1 transition-colors"
+        />
+      </div>
 
       <div className="space-y-1.5">
         <label className="block text-sm font-semibold text-[var(--color-text-primary)]">

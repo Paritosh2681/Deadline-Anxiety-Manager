@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     await connectDB()
 
     const body = await request.json()
-    const { name, deadline, effortLevel, microTasks: microTaskTitles } = body
+    const { name, deadline, effortLevel, microTasks: microTaskTitles, reminderTime } = body
 
     if (!name || !deadline || !effortLevel) {
       return NextResponse.json(
@@ -114,6 +114,7 @@ export async function POST(request: NextRequest) {
       microTasks,
       pressureScore,
       pressureZone,
+      reminderTime: reminderTime || null,
       pressureHistory: [{
         date: new Date(),
         score: pressureScore,

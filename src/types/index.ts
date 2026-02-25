@@ -35,6 +35,7 @@ export interface Task {
   rescheduleCount: number
   lastRescheduledAt: string | null
   pressureHistory: PressureSnapshot[]
+  reminderTime: string | null
 }
 
 export interface CreateTaskPayload {
@@ -42,6 +43,7 @@ export interface CreateTaskPayload {
   deadline: string
   effortLevel: EffortLevel
   microTasks: string[]
+  reminderTime?: string
 }
 
 export interface SimulatePayload {
