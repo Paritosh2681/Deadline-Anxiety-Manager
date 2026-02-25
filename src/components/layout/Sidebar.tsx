@@ -19,14 +19,14 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden md:flex md:flex-col md:w-56 bg-[var(--color-surface)] border-r border-[var(--color-border)] min-h-screen">
-      <div className="px-5 py-5 border-b border-[var(--color-border)]">
+      <Link href="/" className="block px-5 py-5 border-b border-[var(--color-border)] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <h1 className="text-base font-semibold text-[var(--color-text-primary)]">
-          DAM
+          ⏰ DAM
         </h1>
         <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
           Deadline Anxiety Manager
         </p>
-      </div>
+      </Link>
 
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => {

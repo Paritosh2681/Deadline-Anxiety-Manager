@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
 const navItems = [
+  { href: '/', label: 'Home' },
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/tasks/new', label: 'New' },
   { href: '/insights', label: 'Insights' },
