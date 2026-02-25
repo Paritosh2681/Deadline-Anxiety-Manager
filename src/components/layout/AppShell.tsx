@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/context/ThemeContext'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import Modal from '@/components/ui/Modal'
 import { KEYBOARD_SHORTCUTS } from '@/lib/constants'
+import { useNotifications } from '@/hooks/useNotifications'
 
 import { AuthProvider } from '@/context/AuthContext'
 
@@ -35,6 +36,8 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
     onToggleHelp: () => setShowShortcuts((prev) => !prev),
     onCloseModal: () => setShowShortcuts(false),
   })
+
+  useNotifications()
 
   return (
     <div className="flex min-h-screen bg-[var(--color-surface-secondary)]">

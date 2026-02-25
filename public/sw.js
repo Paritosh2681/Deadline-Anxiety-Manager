@@ -54,3 +54,23 @@ self.addEventListener('fetch', (event) => {
             })
     )
 })
+
+// Handle notification clicks — open dashboard
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close()
+    const url = event.notification.data?.url || '/dashboard'
+
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+            // Focus existing tab if found
+            for (const client of clients) {
+                if (client.url.includes(self.location.origin) && 'focus' in client) {
+                    client.navigate(url)
+                    return client.focus()
+                }
+            }
+            // Otherwise open new tab
+            return self.clients.openWindow(url)
+        })
+    )
+})
