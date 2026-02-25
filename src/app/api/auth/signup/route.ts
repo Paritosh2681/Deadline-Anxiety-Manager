@@ -3,6 +3,8 @@ import { connectDB } from '@/lib/db/connection'
 import { UserModel } from '@/lib/db/models/User'
 import { hashPassword, signToken, setAuthCookie } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
     try {
         await connectDB()
@@ -49,9 +51,7 @@ export async function POST(request: NextRequest) {
         })
 
         const token = await signToken(user._id.toString())
-        setAuthCookie(token)
-
-        return NextResponse.json(
+        const response = NextResponse.json(
             {
                 user: {
                     id: user._id,
@@ -61,6 +61,8 @@ export async function POST(request: NextRequest) {
             },
             { status: 201 }
         )
+        setAuthCookie(response, token)
+        return response
     } catch (error: any) {
         console.error('POST /api/auth/signup error:', error)
 

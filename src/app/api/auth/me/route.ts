@@ -3,6 +3,8 @@ import { connectDB } from '@/lib/db/connection'
 import { UserModel } from '@/lib/db/models/User'
 import { getAuthUser } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
     try {
         const userId = await getAuthUser(request)

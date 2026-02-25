@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { SignJWT, jwtVerify } from 'jose'
-import { cookies } from 'next/headers'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 const COOKIE_NAME = 'dam-token'
 const SALT_ROUNDS = 12
@@ -44,9 +43,8 @@ export async function getAuthUser(request: NextRequest): Promise<string | null> 
     return payload?.userId ?? null
 }
 
-export function setAuthCookie(token: string) {
-    const cookieStore = cookies()
-    cookieStore.set(COOKIE_NAME, token, {
+export function setAuthCookie(response: NextResponse, token: string) {
+    response.cookies.set(COOKIE_NAME, token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -55,9 +53,8 @@ export function setAuthCookie(token: string) {
     })
 }
 
-export function clearAuthCookie() {
-    const cookieStore = cookies()
-    cookieStore.set(COOKIE_NAME, '', {
+export function clearAuthCookie(response: NextResponse) {
+    response.cookies.set(COOKIE_NAME, '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
