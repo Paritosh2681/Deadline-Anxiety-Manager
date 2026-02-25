@@ -62,8 +62,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const logout = useCallback(async () => {
         await fetch('/api/auth/logout', { method: 'POST' })
         await mutate({ user: null }, false)
-        router.push('/login')
-    }, [mutate, router])
+        window.location.href = '/login'
+    }, [mutate])
 
     return (
         <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
