@@ -228,7 +228,7 @@ npm start
 
 ## 📄 License
 
-MIT © 2026 [Paritosh](https://github.com/Paritosh2681)
+[Paritosh](https://github.com/Paritosh2681)
 
 ---
 
