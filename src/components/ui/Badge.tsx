@@ -8,17 +8,19 @@ interface BadgeProps {
 }
 
 const zoneStyles: Record<PressureZone, string> = {
-  calm: 'bg-calm-100 text-calm-700 dark:bg-calm-700 dark:text-calm-100',
-  warning: 'bg-warning-100 text-warning-700 dark:bg-warning-700 dark:text-warning-100',
-  panic: 'bg-panic-100 text-panic-700 dark:bg-panic-700 dark:text-panic-100',
+  calm: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  warning: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+  panic: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800',
 }
 
 export default function Badge({ children, zone, className }: BadgeProps) {
   return (
     <span
       className={clsx(
-        'inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-[6px]',
-        zone ? zoneStyles[zone] : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+        'inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full border tracking-tight',
+        zone
+          ? zoneStyles[zone]
+          : 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700',
         className
       )}
     >

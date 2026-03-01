@@ -3,15 +3,23 @@ import clsx from 'clsx'
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   noPadding?: boolean
+  variant?: 'default' | 'elevated' | 'ghost'
+}
+
+const variantStyles = {
+  default: 'bg-[var(--color-surface)] border border-[var(--color-border)] shadow-subtle',
+  elevated: 'bg-[var(--color-surface)] border border-[var(--color-border)] shadow-card',
+  ghost: 'bg-[var(--color-surface-secondary)]',
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, noPadding, ...props }, ref) => {
+  ({ className, noPadding, variant = 'default', ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={clsx(
-          'bg-[var(--color-surface)] rounded-lg shadow-card',
+          'rounded-xl',
+          variantStyles[variant],
           !noPadding && 'p-5',
           className
         )}

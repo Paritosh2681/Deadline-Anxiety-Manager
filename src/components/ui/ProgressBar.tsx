@@ -5,21 +5,27 @@ interface ProgressBarProps {
   percentage: number
   zone?: PressureZone
   className?: string
+  size?: 'sm' | 'md'
 }
 
-const zoneBarColors: Record<PressureZone, string> = {
-  calm: 'bg-calm-500',
-  warning: 'bg-warning-500',
-  panic: 'bg-panic-500',
+const zoneGradients: Record<PressureZone, string> = {
+  calm: 'from-emerald-400 to-emerald-500',
+  warning: 'from-amber-400 to-amber-500',
+  panic: 'from-red-400 to-red-500',
 }
 
-export default function ProgressBar({ percentage, zone = 'calm', className }: ProgressBarProps) {
+export default function ProgressBar({ percentage, zone = 'calm', className, size = 'sm' }: ProgressBarProps) {
+  const height = size === 'md' ? 'h-2' : 'h-1.5'
   return (
-    <div className={clsx('w-full h-1.5 bg-gray-200 rounded-full dark:bg-gray-700', className)}>
+    <div className={clsx(
+      'w-full bg-zinc-100 rounded-full dark:bg-zinc-800 overflow-hidden',
+      height,
+      className
+    )}>
       <div
         className={clsx(
-          'h-full rounded-full transition-all duration-300',
-          zoneBarColors[zone]
+          'h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r',
+          zoneGradients[zone]
         )}
         style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
       />

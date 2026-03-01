@@ -8,7 +8,7 @@ export default function Skeleton({ className }: SkeletonProps) {
   return (
     <div
       className={clsx(
-        'animate-pulse bg-gray-200 rounded-[6px] dark:bg-gray-700',
+        'animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl',
         className
       )}
     />

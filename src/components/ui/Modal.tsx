@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
+import { X } from 'lucide-react'
 import clsx from 'clsx'
 
 interface ModalProps {
@@ -33,31 +34,36 @@ export default function Modal({ isOpen, onClose, title, children, className }: M
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
+      {/* Panel */}
       <div
         className={clsx(
-          'relative z-10 w-full max-w-lg mx-4 bg-[var(--color-surface)] rounded-lg shadow-lg',
+          'relative z-10 w-full max-w-lg mx-4 animate-slide-up',
+          'bg-[var(--color-surface)] rounded-2xl shadow-float',
+          'border border-[var(--color-border)]',
           className
         )}
       >
         {title && (
-          <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border)]">
-            <h2 className="text-base font-semibold text-[var(--color-text-primary)]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+            <h2 className="text-sm font-semibold text-[var(--color-text-primary)] tracking-tight">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+              className="p-1.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-zinc-100 hover:text-[var(--color-text-primary)] dark:hover:bg-zinc-800 transition-colors"
+              aria-label="Close"
             >
-              &times;
+              <X size={15} strokeWidth={2.5} />
             </button>
           </div>
         )}
-        <div className="p-5">{children}</div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   )

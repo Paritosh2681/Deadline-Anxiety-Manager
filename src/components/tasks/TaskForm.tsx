@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button'
 import { EffortLevel } from '@/types'
 import { toast } from 'react-toastify'
 import clsx from 'clsx'
+import { Plus, X } from 'lucide-react'
 
 export default function TaskForm() {
   const router = useRouter()
@@ -21,38 +22,24 @@ export default function TaskForm() {
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {}
-
-    if (!name.trim()) {
-      newErrors.name = 'Task name is required'
-    } else if (name.trim().length > 200) {
-      newErrors.name = 'Task name must be 200 characters or less'
-    }
-
-    if (!deadline) {
-      newErrors.deadline = 'Deadline is required'
-    } else {
+    if (!name.trim()) newErrors.name = 'Task name is required'
+    else if (name.trim().length > 200) newErrors.name = 'Task name must be 200 characters or less'
+    if (!deadline) newErrors.deadline = 'Deadline is required'
+    else {
       const deadlineDate = new Date(deadline)
       const today = new Date()
       today.setHours(0, 0, 0, 0)
-      if (deadlineDate < today) {
-        newErrors.deadline = 'Deadline must be in the future'
-      }
+      if (deadlineDate < today) newErrors.deadline = 'Deadline must be in the future'
     }
-
     const validMicroTasks = microTasks.filter(t => t.trim())
-    if (validMicroTasks.length === 0) {
-      newErrors.microTasks = 'Add at least one micro-task'
-    }
-
+    if (validMicroTasks.length === 0) newErrors.microTasks = 'Add at least one step'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!validate()) return
-
     setIsSubmitting(true)
     try {
       const validMicroTasks = microTasks.filter(t => t.trim())
@@ -67,12 +54,10 @@ export default function TaskForm() {
           reminderTime: reminderTime || null,
         }),
       })
-
       if (!res.ok) {
         const data = await res.json()
         throw new Error(data.error || 'Failed to create task')
       }
-
       toast.success('Task created')
       await mutate('/api/tasks?status=all')
       router.push('/dashboard')
@@ -83,35 +68,26 @@ export default function TaskForm() {
     }
   }
 
-  const addMicroTask = () => {
-    setMicroTasks(prev => [...prev, ''])
-  }
-
-  const removeMicroTask = (index: number) => {
-    setMicroTasks(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const updateMicroTask = (index: number, value: string) => {
+  const addMicroTask = () => setMicroTasks(prev => [...prev, ''])
+  const removeMicroTask = (index: number) => setMicroTasks(prev => prev.filter((_, i) => i !== index))
+  const updateMicroTask = (index: number, value: string) =>
     setMicroTasks(prev => prev.map((t, i) => (i === index ? value : t)))
-  }
-
   const handleMicroTaskKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      if (microTasks[index].trim()) {
-        addMicroTask()
-      }
+      if (microTasks[index].trim()) addMicroTask()
     }
   }
 
-  const effortOptions: { value: EffortLevel; label: string }[] = [
-    { value: 'easy', label: 'Easy' },
-    { value: 'medium', label: 'Medium' },
-    { value: 'hard', label: 'Hard' },
+  const effortOptions: { value: EffortLevel; label: string; desc: string }[] = [
+    { value: 'easy', label: 'Easy', desc: '~1–2h' },
+    { value: 'medium', label: 'Medium', desc: '~4–6h' },
+    { value: 'hard', label: 'Hard', desc: '~8h+' },
   ]
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 max-w-md">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-lg">
+      {/* Task name */}
       <Input
         id="name"
         label="Task name"
@@ -122,6 +98,7 @@ export default function TaskForm() {
         autoFocus
       />
 
+      {/* Deadline */}
       <Input
         id="deadline"
         label="Deadline"
@@ -132,24 +109,26 @@ export default function TaskForm() {
         min={new Date().toISOString().split('T')[0]}
       />
 
+      {/* Reminder */}
       <div className="space-y-1.5">
-        <label htmlFor="reminderTime" className="block text-sm font-semibold text-[var(--color-text-primary)]">
-          Daily reminder time
+        <label htmlFor="reminderTime" className="block text-[0.8rem] font-semibold text-[var(--color-text-primary)] tracking-tight">
+          Daily reminder
         </label>
         <p className="text-xs text-[var(--color-text-secondary)]">
-          Get notified at this time every day until the deadline.
+          Get notified each day until the deadline.
         </p>
         <input
           id="reminderTime"
           type="time"
           value={reminderTime}
           onChange={(e) => setReminderTime(e.target.value)}
-          className="w-full px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1 transition-colors"
+          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-zinc-300 dark:hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all duration-150"
         />
       </div>
 
-      <div className="space-y-1.5">
-        <label className="block text-sm font-semibold text-[var(--color-text-primary)]">
+      {/* Effort level */}
+      <div className="space-y-2">
+        <label className="block text-[0.8rem] font-semibold text-[var(--color-text-primary)] tracking-tight">
           Effort level
         </label>
         <div className="flex gap-2">
@@ -159,29 +138,34 @@ export default function TaskForm() {
               type="button"
               onClick={() => setEffortLevel(opt.value)}
               className={clsx(
-                'flex-1 py-2 px-3 text-sm font-semibold rounded-[6px] border transition-colors',
+                'flex-1 py-2.5 px-3 text-sm font-semibold rounded-xl border transition-all duration-150',
                 effortLevel === opt.value
-                  ? 'bg-gray-900 text-white border-gray-900 dark:bg-gray-100 dark:text-gray-900 dark:border-gray-100'
-                  : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:bg-gray-50 dark:hover:bg-gray-800'
+                  ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm dark:bg-zinc-100 dark:text-zinc-900 dark:border-zinc-100'
+                  : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-zinc-300 hover:text-[var(--color-text-primary)] dark:hover:border-zinc-600'
               )}
             >
-              {opt.label}
+              <span className="block tracking-tight">{opt.label}</span>
+              <span className={clsx(
+                'block text-[10px] font-normal mt-0.5',
+                effortLevel === opt.value ? 'text-zinc-400 dark:text-zinc-600' : 'text-[var(--color-text-tertiary)]'
+              )}>{opt.desc}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <label className="block text-sm font-semibold text-[var(--color-text-primary)]">
-          Micro-tasks
+      {/* Micro-tasks */}
+      <div className="space-y-2">
+        <label className="block text-[0.8rem] font-semibold text-[var(--color-text-primary)] tracking-tight">
+          Steps
         </label>
         <p className="text-xs text-[var(--color-text-secondary)]">
-          Break your task into smaller steps. Press Enter to add another.
+          Break it down. Press Enter to add another step.
         </p>
-        <div className="space-y-2 mt-2">
+        <div className="space-y-1.5 mt-2">
           {microTasks.map((task, index) => (
             <div key={index} className="flex items-center gap-2">
-              <span className="text-xs text-[var(--color-text-secondary)] w-5 text-right shrink-0">
+              <span className="text-xs text-[var(--color-text-tertiary)] w-5 text-right shrink-0 tabular-nums">
                 {index + 1}.
               </span>
               <input
@@ -190,18 +174,16 @@ export default function TaskForm() {
                 value={task}
                 onChange={(e) => updateMicroTask(index, e.target.value)}
                 onKeyDown={(e) => handleMicroTaskKeyDown(e, index)}
-                className="flex-1 px-3 py-2 text-sm rounded-[6px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1 transition-colors"
+                className="flex-1 px-3.5 py-2.5 text-sm rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-zinc-300 dark:hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all duration-150"
               />
               {microTasks.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeMicroTask(index)}
-                  className="p-1.5 text-[var(--color-text-secondary)] hover:text-red-500 transition-colors shrink-0"
-                  aria-label="Remove micro-task"
+                  className="p-1.5 text-[var(--color-text-tertiary)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors shrink-0"
+                  aria-label="Remove step"
                 >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M3 3l8 8M11 3l-8 8" />
-                  </svg>
+                  <X size={14} strokeWidth={2.5} />
                 </button>
               )}
             </div>
@@ -210,24 +192,24 @@ export default function TaskForm() {
         <button
           type="button"
           onClick={addMicroTask}
-          className="mt-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+          className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
         >
-          + Add step
+          <Plus size={13} strokeWidth={2.5} />
+          Add step
         </button>
         {errors.microTasks && (
-          <p className="text-sm text-red-500 mt-1">{errors.microTasks}</p>
+          <p className="text-xs text-red-500 flex items-center gap-1">
+            <span>⚠</span> {errors.microTasks}
+          </p>
         )}
       </div>
 
-      <div className="flex gap-3 pt-2">
+      {/* Actions */}
+      <div className="flex gap-2 pt-2">
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Creating...' : 'Create task'}
+          {isSubmitting ? 'Creating…' : 'Create task'}
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => router.back()}
-        >
+        <Button type="button" variant="ghost" onClick={() => router.back()}>
           Cancel
         </Button>
       </div>

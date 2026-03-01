@@ -12,7 +12,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
         {label && (
           <label
             htmlFor={id}
-            className="block text-sm font-semibold text-[var(--color-text-primary)]"
+            className="block text-[0.8rem] font-semibold text-[var(--color-text-primary)] tracking-tight"
           >
             {label}
           </label>
@@ -22,8 +22,13 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
           id={id}
           type="range"
           className={clsx(
-            'w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer dark:bg-gray-700',
-            'accent-gray-900 dark:accent-gray-100',
+            'w-full h-1.5 bg-zinc-200 rounded-full appearance-none cursor-pointer dark:bg-zinc-700',
+            'accent-zinc-900 dark:accent-zinc-100',
+            '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4',
+            '[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full',
+            '[&::-webkit-slider-thumb]:bg-zinc-900 [&::-webkit-slider-thumb]:shadow-card',
+            '[&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:active:cursor-grabbing',
+            '[&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110',
             className
           )}
           {...props}
