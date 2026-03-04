@@ -68,8 +68,7 @@ export const metadata: Metadata = {
     title: 'DAM',
   },
   verification: {
-    // Replace with your actual Google Search Console verification code
-    google: 'your-google-verification-code',
+    google: 'Q26xpWRUTcvjvRrS56jXWVQQ50Tq4hnNQ2e61hUvL8M',
   },
 }
 
