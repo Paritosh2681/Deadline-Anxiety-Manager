@@ -72,6 +72,35 @@ export default function LandingPage() {
 
   return (
     <div className="landing-page">
+      {/* JSON-LD Structured Data for Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebApplication',
+            name: 'Deadline Anxiety Manager',
+            alternateName: 'DAM',
+            description:
+              'A psychological deadline management app that turns anxiety into a pressure score and breaks tasks into micro-steps.',
+            url: 'https://your-domain.com',
+            applicationCategory: 'ProductivityApplication',
+            operatingSystem: 'Web',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'USD',
+            },
+            featureList: [
+              'Live pressure scores',
+              'Auto micro-tasks',
+              'Deadline simulator',
+              'Behavior insights',
+            ],
+          }),
+        }}
+      />
+
       {/* ═══════════ NAVBAR ═══════════ */}
       <nav className="landing-nav">
         <div className="landing-nav-inner">

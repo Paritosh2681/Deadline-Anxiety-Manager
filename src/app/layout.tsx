@@ -5,13 +5,71 @@ import { ToastContainer } from 'react-toastify'
 import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister'
 
 export const metadata: Metadata = {
-  title: 'Deadline Anxiety Manager',
-  description: 'A psychological deadline management system that reduces anxiety through intelligent task distribution.',
+  title: {
+    default: 'Deadline Anxiety Manager – Turn Anxiety Into Productivity',
+    template: '%s | Deadline Anxiety Manager',
+  },
+  description:
+    'Stop procrastinating. DAM is a psychological deadline management system that turns your anxiety into a pressure score and breaks tasks into micro-steps you can actually finish.',
+  keywords: [
+    'deadline manager',
+    'task manager',
+    'productivity app',
+    'anxiety management',
+    'procrastination',
+    'micro tasks',
+    'deadline tracker',
+    'pressure score',
+    'todo app',
+    'time management',
+  ],
+  authors: [{ name: 'Deadline Anxiety Manager' }],
+  creator: 'Deadline Anxiety Manager',
   manifest: '/manifest.json',
+  metadataBase: new URL('https://your-domain.com'),
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://your-domain.com',
+    siteName: 'Deadline Anxiety Manager',
+    title: 'Deadline Anxiety Manager – Turn Anxiety Into Productivity',
+    description:
+      'Stop procrastinating. DAM turns your anxiety into a pressure score and breaks tasks into micro-steps you can actually finish.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Deadline Anxiety Manager',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Deadline Anxiety Manager – Turn Anxiety Into Productivity',
+    description:
+      'Stop procrastinating. DAM turns your anxiety into a pressure score and breaks tasks into micro-steps you can actually finish.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'DAM',
+  },
+  verification: {
+    // Replace with your actual Google Search Console verification code
+    google: 'your-google-verification-code',
   },
 }
 
