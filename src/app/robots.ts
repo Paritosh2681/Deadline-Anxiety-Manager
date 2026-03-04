@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard', '/tasks/', '/insights'],
       },
     ],
-    sitemap: 'https://your-domain.com/sitemap.xml',
+    sitemap: 'https://deadline-anxiety-manager.onrender.com/sitemap.xml',
   }
 }

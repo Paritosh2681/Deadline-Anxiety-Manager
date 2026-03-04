@@ -83,7 +83,7 @@ export default function LandingPage() {
             alternateName: 'DAM',
             description:
               'A psychological deadline management app that turns anxiety into a pressure score and breaks tasks into micro-steps.',
-            url: 'https://your-domain.com',
+            url: 'https://deadline-anxiety-manager.onrender.com',
             applicationCategory: 'ProductivityApplication',
             operatingSystem: 'Web',
             offers: {

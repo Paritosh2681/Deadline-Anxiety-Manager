@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Deadline Anxiety Manager' }],
   creator: 'Deadline Anxiety Manager',
   manifest: '/manifest.json',
-  metadataBase: new URL('https://your-domain.com'),
+  metadataBase: new URL('https://deadline-anxiety-manager.onrender.com'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://your-domain.com',
+    url: 'https://deadline-anxiety-manager.onrender.com',
     siteName: 'Deadline Anxiety Manager',
     title: 'Deadline Anxiety Manager – Turn Anxiety Into Productivity',
     description:

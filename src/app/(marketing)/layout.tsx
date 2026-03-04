@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Stop procrastinating. DAM is a psychological deadline management app that turns your anxiety into a pressure score and breaks tasks into bite-sized micro-steps you can actually finish.',
   alternates: {
-    canonical: 'https://your-domain.com',
+    canonical: 'https://deadline-anxiety-manager.onrender.com',
   },
 }
 
